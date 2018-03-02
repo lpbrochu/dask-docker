@@ -18,10 +18,12 @@ RUN conda install --yes \
     pandas==0.22.0 \
     ipywidgets \
     jupyterlab \
+    bcolz \
+    s3fs \
     && conda clean -tipsy
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
-RUN pip install graphviz \
+RUN pip install graphviz gcsfs \
                 --no-cache-dir \
                 --no-dependencies
 
@@ -32,6 +34,6 @@ RUN mkdir /opt/app
 COPY examples/ /home/$NB_USER/examples
 RUN chown -R $NB_USER /home/$NB_USER/examples
 USER $NB_USER
-
+RUN echo "Set username to: $NB_USER"
 ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
 CMD ["start.sh jupyter lab"]

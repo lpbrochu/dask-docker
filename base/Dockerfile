@@ -13,7 +13,14 @@ RUN conda create -n dask --yes \
     nomkl \
     numpy==1.14.1 \
     pandas==0.22.0 \
+    fastparquet \
+    bcolz \
+    s3fs \
     && conda clean -tipsy
+
+RUN pip install gcsfs \
+                --no-cache-dir \
+                --no-dependencies
 
 ENV PATH=/opt/conda/envs/dask/bin:$PATH
 
