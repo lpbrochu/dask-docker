@@ -5,11 +5,13 @@ services:
     build:
       context: ./base
       dockerfile: Dockerfile
-    image: 192.168.43.229:5000/dask
+    image: lpbrochu/dask
     hostname: dask-scheduler
+    environment:
+      - affinity:node==ohyk4294ekklee3z9wlvfi8ow
     ports:
-      - "8786:8786"
-      - "8787:8787"
+      - "18786:8786"
+      - "18787:8787"
     command: ["dask-scheduler"]
     volumes:
       - ~/workspace:/home/jovyan/workspace
@@ -18,19 +20,22 @@ services:
     build:
       context: ./base
       dockerfile: Dockerfile
-    image: 192.168.43.229:5000/dask
+    image: lpbrochu/dask
     hostname: dask-worker
-    command: ["dask-worker 192.168.43.229:8786"]
+    command: ["dask-worker 192.168.2.32:18786"]
     volumes:
       - ~/workspace:/home/jovyan/workspace
+    deploy:
+      mode: replicated
+      replicas: 2
 
   notebook:
     build:
       context: ./notebook
       dockerfile: Dockerfile
-    image: 192.168.43.229:5000/dask-notebook
+    image: lpbrochu/dask-notebook
     hostname: notebook
     ports:
-      - "8888:8888"
+      - "18888:8888"
     volumes:
       - ~/workspace:/home/jovyan/workspace
